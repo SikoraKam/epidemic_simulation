@@ -46,7 +46,6 @@ public class SimulationProcess {
         Integer healedNumber = 0;
         Population population = new Population(simulation, infectedNumber, healthSusceptibleNumber, deathNumber, healedNumber, 0);
         populations.add(population);
-        populationRepository.save(population);
 
         infectedDaily.add(infectedNumber);
         infectedDailyAndStillAlive.add(infectedNumber);
@@ -58,12 +57,10 @@ public class SimulationProcess {
 
         for (int i = 0; i < simulation.getSimulationTime(); i++) {
 
-            System.out.println("dzień: " + i);
 
             deathNumber = calculateDeaths(simulation, population);
             population.setDeathNumber(population.getDeathNumber() + deathNumber);
             population.setInfectedNumber(population.getInfectedNumber() - deathNumber);
-            Integer xd = population.getInfectedNumber();
             deathNumberPreviousDay = deathNumber;
 
 
@@ -71,14 +68,12 @@ public class SimulationProcess {
             healedNumber = calculateHealed(simulation,population);
             population.setHealedNumber(healedNumber + population.getHealedNumber());
             population.setInfectedNumber(population.getInfectedNumber() - healedNumber);
-            xd = population.getInfectedNumber();
             healedNumberPreviousDay = healedNumber;
 
 
             if (population.getHealthSusceptibleNumber() > 0) {
                 infectedNumber = calculateInfection(population, simulation, infectedNumberPreviousDay);
                 population.setInfectedNumber(infectedNumber);
-                xd = population.getInfectedNumber();
             }
             else {
                 infectedDaily.add(0);
@@ -90,8 +85,10 @@ public class SimulationProcess {
 
             population.setDayCounter(population.getDayCounter() + 1);
             populations.add(population);
-            populationRepository.saveAndFlush(population);
+            populationRepository.save(new Population(simulation, population.getInfectedNumber(),
+                    population.getHealthSusceptibleNumber(), population.getDeathNumber(), population.getHealedNumber(), population.getDayCounter()));
 
+            System.out.println("dzień: " + i);
             System.out.println("uleczeni: " + population.getHealedNumber());
             System.out.println("zmarli: " + population.getDeathNumber());
             System.out.println("podatni: " + population.getHealthSusceptibleNumber());

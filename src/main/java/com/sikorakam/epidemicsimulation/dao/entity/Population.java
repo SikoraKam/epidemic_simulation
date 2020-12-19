@@ -1,5 +1,7 @@
 package com.sikorakam.epidemicsimulation.dao.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 
 @Entity
@@ -67,10 +69,12 @@ public class Population {
         this.id = id;
     }
 
+    @JsonIgnore
     public Simulation getSimulation() {
         return simulation;
     }
 
+    @JsonIgnore
     public void setSimulation(Simulation simulation) {
         this.simulation = simulation;
     }
