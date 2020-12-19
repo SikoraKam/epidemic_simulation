@@ -16,7 +16,6 @@ import java.util.List;
 @Service
 public class SimulationProcess {
 
-//    private Simulation simulation;
     private List<Population> populations = new ArrayList<>();
     private List<Integer> infectedDaily = new ArrayList<>();
     private List<Integer> infectedDailyAndStillAlive = new ArrayList<>();
@@ -27,9 +26,6 @@ public class SimulationProcess {
     private PopulationRepository populationRepository;
 
 
-//    public SimulationProcess(Simulation simulation) {
-//        this.simulation = simulation;
-//    }
 
     public SimulationProcess() {
     }
@@ -39,21 +35,8 @@ public class SimulationProcess {
         return populationRepository.findAll();
     }
 
-//    @PostMapping("/populations")
-//    public Population createPopulation() throws NotFoundException {
-//        Simulation simulation = simulationRepository.findById(3L).orElseThrow(() -> new NotFoundException("not founddd"));
-//        Integer infectedNumber = simulation.getInitialInfectedNumber();
-//        Integer healthSusceptibleNumber = simulation.getPopulationAmount() - infectedNumber;
-//        Integer deathNumber = 0;
-//        Integer healedNumber = 0;
-//        Population pop = new Population(simulation, infectedNumber, healthSusceptibleNumber, deathNumber, healedNumber, 0);
-//
-//        return populationRepository.save(pop);
-//
-//    }
 
     public void simulate(Simulation simulation){
-//        Simulation simulation = this.simulation;
         System.out.println(simulation);
         Integer infectedNumber = simulation.getInitialInfectedNumber();
         System.out.println(infectedNumber);
@@ -65,8 +48,8 @@ public class SimulationProcess {
         populations.add(population);
         populationRepository.save(population);
 
-        infectedDaily.add(infectedNumber); //czy nie 0
-        infectedDailyAndStillAlive.add(infectedNumber); //czy nie 0
+        infectedDaily.add(infectedNumber);
+        infectedDailyAndStillAlive.add(infectedNumber);
         Integer infectedNumberPreviousDay = 0;
         Integer deathNumberPreviousDay = 0;
         Integer healedNumberPreviousDay = 0;
@@ -90,18 +73,12 @@ public class SimulationProcess {
             population.setInfectedNumber(population.getInfectedNumber() - healedNumber);
             xd = population.getInfectedNumber();
             healedNumberPreviousDay = healedNumber;
-            if(infectedNumberPreviousDay.equals(population.getInfectedNumber()) && i > simulation.getRecoverTime()){
-                population.setHealedNumber(population.getHealedNumber() + infectedNumberPreviousDay);
-                population.setInfectedNumber(0);
-            }
 
-
-
+            
             if (population.getHealthSusceptibleNumber() > 0) {
                 infectedNumber = calculateInfection(population, simulation, infectedNumberPreviousDay);
                 population.setInfectedNumber(infectedNumber);
                 xd = population.getInfectedNumber();
-              //  infectedNumberPreviousDay = infectedNumber;
             }
             else {
                 infectedDaily.add(0);
@@ -148,7 +125,6 @@ public class SimulationProcess {
         else {
             infectedDailyAndStillAlive.set(deathPeriod,infectedDaily.get(deathPeriod) - deathNumber);
         }
-        System.out.println("//////////////////////////////////////////////////////");
 
         return deathNumber;
 
@@ -157,7 +133,6 @@ public class SimulationProcess {
         if (infectedDailyAndStillAlive.size() < simulation.getRecoverTime()) {
             return 0;
         }
-        System.out.println("--------------------------------------------------------");
         Integer healed = infectedDailyAndStillAlive.get(populations.size() - simulation.getRecoverTime());
         return healed <= 0 ? 0 : healed;
     }
@@ -175,12 +150,10 @@ public class SimulationProcess {
             System.out.println("oooo" + infectedNumberPreviousDay);
             infectedDaily.add(lastNotInfected);
             infectedDailyAndStillAlive.add(lastNotInfected);
-//            return lastNotInfected + infectedDaily.get(infectedDaily.size()-1);
             return lastNotInfected + infectedNumberPreviousDay;
         }else {
             infectedDaily.add((int) Math.round(population.getInfectedNumber() * simulation.getIndicatorR()));
             infectedDailyAndStillAlive.add((int) Math.round(population.getInfectedNumber() * simulation.getIndicatorR()));
-//            population.setHealthSusceptibleNumber(lastNotInfected - infectedDaily.get(infectedDaily.size() -1) - population.getDeathNumber());
             population.setHealthSusceptibleNumber(simulation.getPopulationAmount() - infectionNumber - population.getDeathNumber() - population.getHealedNumber());
 
             return infectionNumber;
