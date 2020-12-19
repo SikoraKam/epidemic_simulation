@@ -70,6 +70,8 @@ public class SimulationProcess {
 //        infectedDaily.add(infectedNumber); //czy nie 0
 //        infectedDailyAndStillAlive.add(infectedNumber); //czy nie 0
         Integer infectedNumberPreviousDay = 0;
+        Integer deathNumberPreviousDay = 0;
+        Integer healedNumberPreviousDay = 0;
 
 
 
@@ -77,20 +79,27 @@ public class SimulationProcess {
 
             System.out.println("dzień: " + i);
 
-            deathNumber = calculateDeaths(simulation);
+            deathNumber = calculateDeaths(simulation, population);
             population.setDeathNumber(deathNumber);
-            population.setInfectedNumber(population.getInfectedNumber() - deathNumber);
+            population.setInfectedNumber(population.getInfectedNumber() - deathNumber + deathNumberPreviousDay);
+            deathNumberPreviousDay = deathNumber;
 
 
 
             healedNumber = calculateHealed(simulation);
             population.setHealedNumber(healedNumber);
-            population.setInfectedNumber(population.getInfectedNumber() - healedNumber);
+            population.setInfectedNumber(population.getInfectedNumber() - healedNumber + healedNumberPreviousDay);
+            healedNumberPreviousDay = healedNumber;
 
-
-            infectedNumber = calculateInfection(population,simulation, infectedNumberPreviousDay);
-            population.setInfectedNumber(infectedNumber);
-            infectedNumberPreviousDay = infectedNumber;
+            if (population.getHealthSusceptibleNumber() > 0) {
+                infectedNumber = calculateInfection(population, simulation, infectedNumberPreviousDay);
+                population.setInfectedNumber(infectedNumber);
+                infectedNumberPreviousDay = infectedNumber;
+            }
+            else {
+                infectedDaily.add(0);
+                infectedDailyAndStillAlive.add(0);
+            }
 
 
 
@@ -114,15 +123,17 @@ public class SimulationProcess {
         }
     }
 
-    Integer calculateDeaths(Simulation simulation){
+    Integer calculateDeaths(Simulation simulation, Population population){
         if (infectedDaily.size() < simulation.getDeathTime()){
             return 0;
         }
 //        Integer temp = infectedDaily.get(simulation.getPopulations().size() - simulation.getDeathTime());
         int deathPeriod = populations.size() - simulation.getDeathTime();
-        Integer temp =  infectedDaily.get(deathPeriod);
+        Double temp = Double.valueOf(infectedDaily.get(deathPeriod));
 
-        Integer deathNumber = temp <= simulation.getMortality() ? temp : simulation.getMortality();
+        Integer deathNumber = (temp <= simulation.getMortality() * population.getInfectedNumber())
+                ? (int) Math.round(temp)
+                : (int) Math.round(simulation.getMortality() * population.getInfectedNumber());
 
         if(infectedDaily.get(deathPeriod) - deathNumber <= 0){
             infectedDailyAndStillAlive.set(deathPeriod, 0);
@@ -145,7 +156,7 @@ public class SimulationProcess {
         return healed <= 0 ? 0 : healed;
     }
     Integer calculateInfection(Population population, Simulation simulation, Integer infectedNumberPreviousDay){
-        Integer infectionNumber = population.getInfectedNumber() + (population.getInfectedNumber() * simulation.getIndicatorR());
+        Integer infectionNumber = population.getInfectedNumber() + (int) Math.round(population.getInfectedNumber() * simulation.getIndicatorR());
         Integer lastNotInfected = population.getHealthSusceptibleNumber();
 
 
@@ -154,6 +165,8 @@ public class SimulationProcess {
 
         if(lastNotInfected < infectedDaily.get(infectedDaily.size()-1)) {
             lastNotInfected = simulation.getPopulationAmount() - infectedNumberPreviousDay - population.getDeathNumber() - population.getHealedNumber();
+            if (lastNotInfected <= 0)
+                lastNotInfected = 0;
             population.setHealthSusceptibleNumber(0);
             System.out.println("ddd" + lastNotInfected);
             System.out.println("oooo" + infectedNumberPreviousDay);

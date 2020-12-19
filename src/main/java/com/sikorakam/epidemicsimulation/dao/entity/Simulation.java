@@ -119,19 +119,19 @@ public class Simulation {
         this.initialInfectedNumber = initialInfectedNumber;
     }
 
-    public Integer getIndicatorR() {
+    public Double getIndicatorR() {
         return indicatorR;
     }
 
-    public void setIndicatorR(Integer indicatorR) {
+    public void setIndicatorR(Double indicatorR) {
         this.indicatorR = indicatorR;
     }
 
-    public Integer getMortality() {
+    public Double getMortality() {
         return mortality;
     }
 
-    public void setMortality(Integer mortality) {
+    public void setMortality(Double mortality) {
         this.mortality = mortality;
     }
 
