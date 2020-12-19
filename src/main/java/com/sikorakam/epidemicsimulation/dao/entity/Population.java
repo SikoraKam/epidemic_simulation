@@ -42,11 +42,21 @@ public class Population {
         this.dayCounter = dayCounter;
     }
 
-    public Population(Integer infectedNumber, Integer healthSusceptibleNumber, Integer deathNumber, Integer healedNumber) {
+    public Population(Integer infectedNumber, Integer healthSusceptibleNumber, Integer deathNumber, Integer healedNumber, Integer dayCounter) {
         this.infectedNumber = infectedNumber;
         this.healthSusceptibleNumber = healthSusceptibleNumber;
         this.deathNumber = deathNumber;
         this.healedNumber = healedNumber;
+        this.dayCounter = dayCounter;
+    }
+
+    public Population(Simulation simulation, Integer infectedNumber, Integer healthSusceptibleNumber, Integer deathNumber, Integer healedNumber, Integer dayCounter) {
+        this.simulation = simulation;
+        this.infectedNumber = infectedNumber;
+        this.healthSusceptibleNumber = healthSusceptibleNumber;
+        this.deathNumber = deathNumber;
+        this.healedNumber = healedNumber;
+        this.dayCounter = dayCounter;
     }
 
     public Long getId() {

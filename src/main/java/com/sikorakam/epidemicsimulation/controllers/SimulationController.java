@@ -1,6 +1,7 @@
 package com.sikorakam.epidemicsimulation.controllers;
 
 import com.sikorakam.epidemicsimulation.SimulationProcess;
+import com.sikorakam.epidemicsimulation.dao.PopulationRepository;
 import com.sikorakam.epidemicsimulation.dao.SimulationRepository;
 import com.sikorakam.epidemicsimulation.dao.entity.Simulation;
 import com.sikorakam.epidemicsimulation.exceptions.NotFoundException;
@@ -17,6 +18,11 @@ public class SimulationController {
 
     @Autowired
     private SimulationRepository simulationRepository;
+    @Autowired
+    private PopulationRepository populationRepository;
+
+    @Autowired
+    SimulationProcess simulationProcess;
 
     @GetMapping("/simulations")
     public Iterable<Simulation> findAllSimulations() {
@@ -31,8 +37,8 @@ public class SimulationController {
     @PostMapping("/simulations")
     public Simulation createSimulation(@Valid @RequestBody Simulation simulation){
         simulationRepository.save(simulation);
-        SimulationProcess simulationProcess = new SimulationProcess(simulation);
-        simulationProcess.simulate();
+//        SimulationProcess simulationProcess = new SimulationProcess(simulation);
+        simulationProcess.simulate(simulation);
         return simulation;
 
     }

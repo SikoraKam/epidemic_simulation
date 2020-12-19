@@ -31,11 +31,11 @@ public class Simulation {
 
     @NonNull
     @Column(name = "indicator_R")
-    private Integer indicatorR; //R - wskaźnik określający ile osób zaraża jedna zarażona osoba, czyli znany z newsów covidowych wskaźnik R
+    private Double indicatorR; //R - wskaźnik określający ile osób zaraża jedna zarażona osoba, czyli znany z newsów covidowych wskaźnik R
 
     @NonNull
     @Column(name = "mortality")
-    private Integer mortality; //M - wskaźnik śmiertelności, określający ilu spośród zarażonych umiera
+    private Double mortality; //M - wskaźnik śmiertelności, określający ilu spośród zarażonych umiera
 
     @NonNull
     @Column(name = "recover_time")
@@ -53,7 +53,7 @@ public class Simulation {
     public Simulation() {
     }
 
-    public Simulation(Long id, Set<Population> populations, String name, Integer populationAmount, Integer initialInfectedNumber, Integer indicatorR, Integer mortality, Integer recoverTime, Integer deathTime, Integer simulationTime) {
+    public Simulation(Long id, Set<Population> populations, String name, Integer populationAmount, Integer initialInfectedNumber, Double indicatorR, Double mortality, Integer recoverTime, Integer deathTime, Integer simulationTime) {
         this.id = id;
         this.populations = populations;
         this.name = name;
@@ -66,7 +66,7 @@ public class Simulation {
         this.simulationTime = simulationTime;
     }
 
-    public Simulation(String name, Integer populationAmount, Integer initialInfectedNumber, Integer indicatorR, Integer mortality, Integer recoverTime, Integer deathTime, Integer simulationTime) {
+    public Simulation(String name, Integer populationAmount, Integer initialInfectedNumber, Double indicatorR, Double mortality, Integer recoverTime, Integer deathTime, Integer simulationTime) {
         this.name = name;
         this.populationAmount = populationAmount;
         this.initialInfectedNumber = initialInfectedNumber;
