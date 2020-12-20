@@ -54,8 +54,18 @@ public class SimulationController {
             simulation.setRecoverTime(newSimulation.getRecoverTime());
             simulation.setDeathTime(newSimulation.getDeathTime());
             simulation.setSimulationTime(newSimulation.getSimulationTime());
-            return simulationRepository.save(simulation);
+            simulationRepository.save(simulation);
+
+            populationRepository.findAllBySimulationId(id).forEach(population -> {
+                populationRepository.delete(population);
+            });
+
+            simulationProcess.simulate(simulation);
+            return simulation;
         }).orElseThrow(() -> new NotFoundException("simulation not found"));
+
+
+
     }
 
     @DeleteMapping("simulations/{id}")

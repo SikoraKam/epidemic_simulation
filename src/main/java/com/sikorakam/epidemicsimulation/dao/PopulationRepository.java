@@ -5,5 +5,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface PopulationRepository extends JpaRepository<Population, Long> {
 
-    Iterable<Population> findBySimulationId(Long simulationId);
+    Iterable<Population> findAllBySimulationId(Long simulationId);
 }
