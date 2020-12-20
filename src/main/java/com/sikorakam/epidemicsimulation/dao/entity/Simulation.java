@@ -1,6 +1,5 @@
 package com.sikorakam.epidemicsimulation.dao.entity;
 
-import com.sikorakam.epidemicsimulation.dao.PopulationRepository;
 import org.springframework.lang.NonNull;
 
 import javax.persistence.*;

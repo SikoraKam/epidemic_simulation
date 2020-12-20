@@ -37,7 +37,6 @@ public class SimulationController {
     @PostMapping("/simulations")
     public Simulation createSimulation(@Valid @RequestBody Simulation simulation){
         simulationRepository.save(simulation);
-//        SimulationProcess simulationProcess = new SimulationProcess(simulation);
         simulationProcess.simulate(simulation);
         return simulation;
 

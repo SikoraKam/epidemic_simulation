@@ -5,9 +5,9 @@ import com.sikorakam.epidemicsimulation.dao.SimulationRepository;
 import com.sikorakam.epidemicsimulation.dao.entity.Population;
 import com.sikorakam.epidemicsimulation.dao.entity.Simulation;
 import org.springframework.beans.factory.annotation.Autowired;
-
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,11 +37,8 @@ public class SimulationProcess {
 
 
     public void simulate(Simulation simulation){
-        System.out.println(simulation);
         Integer infectedNumber = simulation.getInitialInfectedNumber();
-        System.out.println(infectedNumber);
         Integer healthSusceptibleNumber = simulation.getPopulationAmount();
-        System.out.println(healthSusceptibleNumber);
         Integer deathNumber = 0;
         Integer healedNumber = 0;
         Population population = new Population(simulation, infectedNumber, healthSusceptibleNumber, deathNumber, healedNumber, 0);
@@ -88,20 +85,6 @@ public class SimulationProcess {
             populationRepository.save(new Population(simulation, population.getInfectedNumber(),
                     population.getHealthSusceptibleNumber(), population.getDeathNumber(), population.getHealedNumber(), population.getDayCounter()));
 
-            System.out.println("dzień: " + i);
-            System.out.println("uleczeni: " + population.getHealedNumber());
-            System.out.println("zmarli: " + population.getDeathNumber());
-            System.out.println("podatni: " + population.getHealthSusceptibleNumber());
-            System.out.println("zarazeni: " + population.getInfectedNumber());
-            System.out.println("wszyscy z symulacji: " + simulation.getPopulationAmount());
-
-            if (population.getHealedNumber() + population.getHealthSusceptibleNumber() + population.getDeathNumber()
-                    + population.getInfectedNumber() != simulation.getPopulationAmount()){
-                System.out.println("===============================> DANE SIĘ NIE ZGADZAJĄ");
-
-            }
-            System.out.println();
-
         }
     }
 
@@ -143,8 +126,6 @@ public class SimulationProcess {
         if(lastNotInfected < (int) Math.round(population.getInfectedNumber() * simulation.getIndicatorR())) {
             lastNotInfected = simulation.getPopulationAmount() - infectedNumberPreviousDay - population.getDeathNumber() - population.getHealedNumber();
             population.setHealthSusceptibleNumber(0);
-            System.out.println("ddd" + lastNotInfected);
-            System.out.println("oooo" + infectedNumberPreviousDay);
             infectedDaily.add(lastNotInfected);
             infectedDailyAndStillAlive.add(lastNotInfected);
             return lastNotInfected + infectedNumberPreviousDay;
